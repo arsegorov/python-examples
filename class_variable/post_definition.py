@@ -1,4 +1,9 @@
+from typing import List
+
+
 class PostdefinedVariable:
+    one_list: List[int] = []
+
     @staticmethod
     def add_one(n: int) -> int:
         return n + 1
