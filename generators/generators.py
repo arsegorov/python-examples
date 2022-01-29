@@ -120,11 +120,15 @@ def dates_range(
 
 #%%
 def main():
+    guard = 1
     g = dates_range("2021-01-01", stop_at=1, interval=timedelta(days=30))
     print(next(g))
     print(g.send(5))
     for d in g:
         print(d)
+        guard +=1
+        if guard > 10:
+            return
 
 
 #%%
