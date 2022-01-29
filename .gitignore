@@ -1,10 +1,17 @@
+# IDE settings
 .vscode
 .idea
 
+# Python cache
 __pycache__
 *.pyc
 
+# Notebook
 *.ipynb
 
+# Testing
 .hypothesis
 .coverage
+
+# Logs
+*.log
