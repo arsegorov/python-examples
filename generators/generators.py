@@ -84,11 +84,11 @@ def dates_range(
         logger.warning("No dates exist in the range. Exiting")
         return
 
-    def _in_range(d: date, stop) -> bool:
-        if not stop or d == start_day:
+    def _in_range(d: date) -> bool:
+        if not stop_at or d == start_day:
             logger.debug(f"'{d}' is in the range")
             return True
-        if (d - start_day).days * (stop - d).days > 0:
+        if (d - start_day).days * (stop_at - d).days > 0:
             logger.debug(f"'{d}' is in the range")
             return True
         else:
@@ -96,7 +96,7 @@ def dates_range(
             return False
 
     day = start_day
-    while _in_range(day, stop_at):
+    while _in_range(day):
         logger.debug(f"day: {day}")
         logger.debug(f"stop_at: {stop_at}")
         new_stop_at = yield day
