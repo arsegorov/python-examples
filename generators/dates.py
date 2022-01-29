@@ -9,7 +9,10 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 fh = logging.FileHandler(f"{__file__.split('.')[0]}.log", mode="w")
-fmtr = logging.Formatter("[%(asctime)s] <%(filename)s> line %(lineno)s, in %(funcName)s: [%(levelname)s] %(message)s")
+fmtr = logging.Formatter(
+    "[%(asctime)s] <%(filename)s> line %(lineno)s, in %(funcName)s: "
+    "[%(levelname)s] %(message)s"
+)
 fh.setFormatter(fmtr)
 
 logger.addHandler(fh)
@@ -55,7 +58,8 @@ def dates_range(
         if isinstance(interval, int):
             interval = timedelta(days=interval)
         elif (
-            interval - timedelta(days=interval.days) != ZERO_DELTA or interval == ZERO_DELTA
+            interval - timedelta(days=interval.days) != ZERO_DELTA
+            or interval == ZERO_DELTA
         ):
             msg = (
                 "`interval` should be a non-zero integer number of days. "
@@ -73,7 +77,8 @@ def dates_range(
         raise e
 
     logger.info(
-        f"Running with start_day = '{start_day}', interval = '{interval}', stop_at = '{stop_at}'"
+        f"Running with start_day = '{start_day}', interval = '{interval}', "
+        "stop_at = '{stop_at}'"
     )
 
     # If a stop day is provided,
@@ -126,7 +131,7 @@ def main():
     print(g.send(5))
     for d in g:
         print(d)
-        guard +=1
+        guard += 1
         if guard > 10:
             return
 
