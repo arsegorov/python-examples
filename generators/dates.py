@@ -8,7 +8,7 @@ from typing import Union, Optional, Generator
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-fh = logging.FileHandler("dates_range.log", mode="w")
+fh = logging.FileHandler(f"{__file__.split('.')[0]}.log", mode="w")
 fmtr = logging.Formatter("[%(asctime)s] <%(filename)s> line %(lineno)s, in %(funcName)s: [%(levelname)s] %(message)s")
 fh.setFormatter(fmtr)
 
