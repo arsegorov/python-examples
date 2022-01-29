@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 fh = logging.FileHandler("dates_range.log", mode="w")
-fmtr = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+fmtr = logging.Formatter("[%(asctime)s] <%(filename)s> line %(lineno)s, in %(funcName)s: [%(levelname)s] %(message)s")
 fh.setFormatter(fmtr)
 
 logger.addHandler(fh)
@@ -45,28 +45,32 @@ def dates_range(
         logger.error(msg)
         raise TypeError(msg)
 
-    # Doing all the type conversions now,
-    #  so that any incorrect argument formatting
-    #  could be caught before proceeding
-    if isinstance(start_day, str):
-        start_day = datetime.strptime(start_day, "%Y-%m-%d").date()
+    try:
+        # Doing all the type conversions now,
+        #  so that any incorrect argument formatting
+        #  could be caught before proceeding
+        if isinstance(start_day, str):
+            start_day = datetime.strptime(start_day, "%Y-%m-%d").date()
 
-    if isinstance(interval, int):
-        interval = timedelta(days=interval)
-    elif (
-        interval - timedelta(days=interval.days) != ZERO_DELTA or interval == ZERO_DELTA
-    ):
-        msg = (
-            "`interval` should be a non-zero integer number of days. "
-            f"Instead got a '{interval}'"
-        )
-        logger.error(msg)
-        raise ValueError(msg)
+        if isinstance(interval, int):
+            interval = timedelta(days=interval)
+        elif (
+            interval - timedelta(days=interval.days) != ZERO_DELTA or interval == ZERO_DELTA
+        ):
+            msg = (
+                "`interval` should be a non-zero integer number of days. "
+                f"Instead got a '{interval}'"
+            )
+            logger.error(msg)
+            raise ValueError(msg)
 
-    if isinstance(stop_at, str):
-        stop_at = datetime.strptime(stop_at, "%Y-%m-%d").date()
-    elif isinstance(stop_at, int):
-        stop_at = start_day + interval * stop_at
+        if isinstance(stop_at, str):
+            stop_at = datetime.strptime(stop_at, "%Y-%m-%d").date()
+        elif isinstance(stop_at, int):
+            stop_at = start_day + interval * stop_at
+    except Exception as e:
+        logger.error(e.args[0], exc_info=True)
+        raise e
 
     logger.info(
         f"Running with start_day = '{start_day}', interval = '{interval}', stop_at = '{stop_at}'"
