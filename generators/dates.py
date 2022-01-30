@@ -78,8 +78,8 @@ def dates_range(
 
     logger.info(
         f"Running with start_day = '{start_day}', "
-        f"interval = '{interval.days} days', "
-        f"stop_at = '{stop_at}'"
+        f"stop_at = '{stop_at}', "
+        f"interval = '{interval.days} days'"
     )
 
     # If a stop day is provided,
@@ -91,26 +91,22 @@ def dates_range(
         return
 
     def _in_range(d: date) -> bool:
-        if not stop_at or d == start_day:
-            logger.debug(f"'{d}' is in the range")
-            return True
-        if (d - start_day).days * (stop_at - d).days > 0:
-            logger.debug(f"'{d}' is in the range")
-            return True
-        else:
-            logger.debug(f"'{d}' is not in the range")
-            return False
+        return (
+            not stop_at
+            or d == start_day
+            or (d - start_day).days * (stop_at - d).days > 0
+        )
 
     day = start_day
     while _in_range(day):
-        logger.debug(f"day: {day}")
-        logger.debug(f"stop_at: {stop_at}")
+        logger.debug(f"day: '{day}', range: ['{start_day}', '{stop_at}')")
+        logger.debug(f"'{day}' IN the range")
+
         new_stop_at = yield day
 
-        logger.debug(f"Sent {new_stop_at!r} to the generator")
-        _check_type(
-            new_stop_at, "Value sent to the generator", (date, str, int, NoneType)
-        )
+        logger.debug(f"Sent {new_stop_at!r} back to generator")
+
+        _check_type(new_stop_at, "Value sent back", (date, str, int, NoneType))
         if isinstance(new_stop_at, str):
             stop_at = datetime.strptime(new_stop_at, "%Y-%m-%d").date()
         elif isinstance(new_stop_at, date):
@@ -119,6 +115,9 @@ def dates_range(
             stop_at = day + interval * (new_stop_at + 1) if new_stop_at >= 0 else None
 
         day += interval
+    else:
+        logger.debug(f"day: '{day}', range: ['{start_day}', '{stop_at}')")
+        logger.debug(f"'{day}' NOT in the range")
 
 
 #%%
