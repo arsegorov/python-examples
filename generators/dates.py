@@ -2,7 +2,7 @@
 from datetime import date, datetime, timedelta
 import logging
 from types import NoneType
-from typing import Union, Optional, Generator
+from typing import Any, Generator, Iterable, Optional, Union
 
 
 logger = logging.getLogger(__name__)
@@ -21,32 +21,32 @@ ZERO_DELTA = timedelta(0)
 
 
 #%%
+def _check_type(
+    object: Any, object_description: str, types: Union[type, Iterable[type]]
+) -> None:
+    """If the object isn't of one of the types, logs the error and raises TypeError."""
+    if not isinstance(object, types):
+        error_message = (
+            f"{object_description} is expected to be "
+            + (
+                f"one of {tuple(t.__name__ for t in types)}"
+                if isinstance(types, Iterable)
+                else f"'{types.__name__}'"
+            )
+            + f". Instead got '{type(object).__name__}'"
+        )
+        logger.error(error_message, stack_info=True)
+        raise TypeError(error_message)
+
+
 def dates_range(
     start_day: Union[date, str],
     stop_at: Optional[Union[date, str, int]] = None,
     interval: Union[timedelta, int] = timedelta(days=1),
 ) -> Generator[date, Optional[Union[date, str, int]], None]:
-    if not isinstance(start_day, (date, str)):
-        msg = (
-            "`start_day` should be either a datetime.date or a str. "
-            f"Instead got a {type(start_day).__name__}"
-        )
-        logger.error(msg)
-        raise TypeError(msg)
-    if not isinstance(stop_at, (date, str, int, NoneType)):
-        msg = (
-            "`stop_at` should be either a datetime.date, a str, an int or None. "
-            f"Instead got a {type(stop_at).__name__}"
-        )
-        logger.error(msg)
-        raise TypeError(msg)
-    if not isinstance(interval, (timedelta, int)):
-        msg = (
-            "`interval` should be either a datetime.timedelta or an int. "
-            f"Instead got a {type(interval).__name__}"
-        )
-        logger.error(msg)
-        raise TypeError(msg)
+    _check_type(start_day, "`start_day`", (date, str))
+    _check_type(stop_at, "`stop_at`", (date, str, int, NoneType))
+    _check_type(interval, "`interval`", (timedelta, int))
 
     try:
         # Doing all the type conversions now,
@@ -63,7 +63,7 @@ def dates_range(
         ):
             msg = (
                 "`interval` should be a non-zero integer number of days. "
-                f"Instead got a '{interval}'"
+                f"Instead got '{interval}'"
             )
             logger.error(msg)
             raise ValueError(msg)
@@ -105,26 +105,23 @@ def dates_range(
         logger.debug(f"day: {day}")
         logger.debug(f"stop_at: {stop_at}")
         new_stop_at = yield day
+
         logger.debug(f"Sent {new_stop_at!r} to the generator")
-        if not isinstance(new_stop_at, (date, str, int, NoneType)):
-            msg = (
-                "Value sent to the generator should be either "
-                "a datetime.date, a str, an int or None. "
-                f"Instead got a {type(new_stop_at).__name__}"
-            )
-            logger.error(msg)
-            raise TypeError(msg)
+        _check_type(
+            new_stop_at, "Value sent to the generator", (date, str, int, NoneType)
+        )
         if isinstance(new_stop_at, str):
             stop_at = datetime.strptime(new_stop_at, "%Y-%m-%d").date()
         elif isinstance(new_stop_at, date):
             stop_at = new_stop_at
         elif isinstance(new_stop_at, int):
             stop_at = day + interval * (new_stop_at + 1) if new_stop_at >= 0 else None
+
         day += interval
 
 
 #%%
-def main():
+def _main():
     guard = 1
     g = dates_range("2021-01-01", stop_at=1, interval=timedelta(days=30))
     print(next(g))
@@ -138,4 +135,4 @@ def main():
 
 #%%
 if __name__ == "__main__":
-    main()
+    _main()
