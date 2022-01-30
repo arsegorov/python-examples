@@ -123,15 +123,20 @@ def dates_range(
 
 #%%
 def _main():
+    g = dates_range("2021-01-01", stop_at=10, interval=3)
+    fh.setLevel(logging.INFO)
+
     guard = 1
-    g = dates_range("2021-01-01", stop_at=1, interval=timedelta(days=30))
-    print(next(g))
-    print(g.send(5))
+    d = None
     for d in g:
+        if guard > 10:
+            break
         print(d)
         guard += 1
-        if guard > 10:
-            return
+    else:
+        msg = (f"Finished the entire sequence, at '{d}'") 
+        print(msg)
+        logger.info(msg)
 
 
 #%%
