@@ -122,8 +122,14 @@ def dates_range(
 
 #%%
 def _main():
-    g = dates_range("2021-01-01", stop_at=10, interval=3)
-    fh.setLevel(logging.INFO)
+    start_day, stop_at, interval = "2021-01-01", 10, 3
+    g = dates_range(start_day, stop_at, interval)
+    logger.debug(
+        f'Using dates_range(start_day="{start_day}", '
+        f"stop_at={stop_at}, "
+        f"interval={interval})"
+    )
+    # fh.setLevel(logging.INFO)
 
     guard = 1
     d = None
@@ -133,7 +139,7 @@ def _main():
         print(d)
         guard += 1
     else:
-        msg = (f"Finished the entire sequence, at '{d}'") 
+        msg = f"Finished the entire sequence, at '{d}'"
         print(msg)
         logger.info(msg)
 
