@@ -10,8 +10,8 @@ logger.setLevel(logging.DEBUG)
 
 fh = logging.FileHandler(f"{__file__.split('.')[0]}.log", mode="w")
 fmtr = logging.Formatter(
-    "[%(asctime)s] <%(filename)s> line %(lineno)s, in %(funcName)s: "
-    "[%(levelname)s] %(message)s"
+    "[%(asctime)s] [%(levelname)s] <%(filename)s> line %(lineno)s, in %(funcName)s: "
+    "%(message)s"
 )
 fh.setFormatter(fmtr)
 
@@ -77,8 +77,9 @@ def dates_range(
         raise e
 
     logger.info(
-        f"Running with start_day = '{start_day}', interval = '{interval}', "
-        "stop_at = '{stop_at}'"
+        f"Running with start_day = '{start_day}', "
+        f"interval = '{interval.days} days', "
+        f"stop_at = '{stop_at}'"
     )
 
     # If a stop day is provided,
