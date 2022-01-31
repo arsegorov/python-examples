@@ -33,9 +33,9 @@ def _check_type(
                 if isinstance(types, Iterable)
                 else f"'{types.__name__}'"
             )
-            + f". Instead got '{type(object).__name__}'"
+            + f". Instead got a value of {object!r} ('{type(object).__name__}')"
         )
-        logger.error(error_message, stack_info=True)
+        # logger.error(error_message, stack_info=True)
         raise TypeError(error_message)
 
 
@@ -44,11 +44,10 @@ def dates_range(
     stop_at: Optional[Union[date, str, int]] = None,
     interval: Union[timedelta, int] = timedelta(days=1),
 ) -> Generator[date, Optional[Union[date, str, int]], None]:
-    _check_type(start_day, "`start_day`", (date, str))
-    _check_type(stop_at, "`stop_at`", (date, str, int, NoneType))
-    _check_type(interval, "`interval`", (timedelta, int))
-
     try:
+        _check_type(start_day, "`start_day`", (date, str))
+        _check_type(stop_at, "`stop_at`", (date, str, int, NoneType))
+        _check_type(interval, "`interval`", (timedelta, int))
         # Doing all the type conversions now,
         #  so that any incorrect argument formatting
         #  could be caught before proceeding
@@ -65,7 +64,6 @@ def dates_range(
                 "`interval` should be a non-zero integer number of days. "
                 f"Instead got '{interval}'"
             )
-            logger.error(msg)
             raise ValueError(msg)
 
         if isinstance(stop_at, str):
