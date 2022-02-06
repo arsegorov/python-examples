@@ -2,7 +2,7 @@
 from datetime import date, datetime, timedelta
 import logging
 from types import NoneType
-from typing import Any, Generator, Iterable, Optional, Union
+from typing import Any, Generator, Iterable
 
 
 logger = logging.getLogger(__name__)
@@ -51,6 +51,7 @@ def _check_type(
         raise TypeError(error_message)
 
 
+#%%
 def dates_range(
     start_day: date | str,
     stop_at: date | str | int | None = None,
