@@ -43,7 +43,7 @@ def _check_type(
             + (
                 f"one of {tuple(t.__name__ for t in types)}"
                 if isinstance(types, Iterable)
-                else f"'{types.__name__}'"
+                else f"{types.__name__!r}"
             )
             + f". Instead got a value of {object!r} ('{type(object).__name__}')"
         )

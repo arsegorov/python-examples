@@ -7,18 +7,18 @@ from generators.dates import _check_type
 
 def test__check_type():
     with pytest.raises(
-        TypeError, match=r"5 is expected to be 'float'\. Instead got 'int'"
+        TypeError, match=r"5 is expected to be 'float'\. Instead got a value of 5 \('int'\)"
     ):
         _check_type(5, "5", float)
 
     with pytest.raises(
-        TypeError, match=r"5 is expected to be one of \('float',\)\. Instead got 'int'"
+        TypeError, match=r"5 is expected to be one of \('float',\)\. Instead got a value of 5 \('int'\)"
     ):
         _check_type(5, "5", (float,))
 
     with pytest.raises(
         TypeError,
-        match=r"5 is expected to be one of \('float', 'str'\)\. Instead got 'int'",
+        match=r"5 is expected to be one of \('float', 'str'\)\. Instead got a value of 5 \('int'\)",
     ):
         _check_type(5, "5", (float, str))
 
