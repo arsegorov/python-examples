@@ -22,9 +22,21 @@ ZERO_DELTA = timedelta(0)
 
 #%%
 def _check_type(
-    object: Any, object_description: str, types: Union[type, Iterable[type]]
+    object: Any, object_description: str, types: type | Iterable[type]
 ) -> None:
-    """If the object isn't of one of the types, logs the error and raises TypeError."""
+    """If `object` isn't of a given type, log and raise TypeError.
+
+    Args:
+        object (Any):
+            [description]
+        object_description (str):
+            [description]
+        types (type | Iterable[type]):
+            [description]
+
+    Raises:
+        TypeError: [description]
+    """
     if not isinstance(object, types):
         error_message = (
             f"{object_description} is expected to be "
@@ -40,10 +52,30 @@ def _check_type(
 
 
 def dates_range(
-    start_day: Union[date, str],
-    stop_at: Optional[Union[date, str, int]] = None,
-    interval: Union[timedelta, int] = timedelta(days=1),
-) -> Generator[date, Optional[Union[date, str, int]], None]:
+    start_day: date | str,
+    stop_at: date | str | int | None = None,
+    interval: timedelta | int = timedelta(days=1),
+) -> Generator[date, date | str | int | None, None]:
+    """[summary]
+
+    Args:
+        start_day (date | str):
+            [description]
+        stop_at (date | str | int | NoneType, optional):
+            [description]. Defaults to None.
+        interval (timedelta | int, optional):
+            [description]. Defaults to timedelta(days=1).
+
+    Raises:
+        ValueError: [description]
+        TypeError: [description]
+
+    Returns:
+        [type]: [description]
+
+    Yields:
+        Generator[date, date | str | int | None, None]: [description]
+    """
     try:
         _check_type(start_day, "`start_day`", (date, str))
         _check_type(stop_at, "`stop_at`", (date, str, int, NoneType))
